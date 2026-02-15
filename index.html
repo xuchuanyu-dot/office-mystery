@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>办公室失窃案 - 你能找出真相吗？</title>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    /* 你的原有样式保持不变 */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-image: url('background.jpg');
+      background-size: cover;
+      background-blend-mode: overlay;
+      background-color: rgba(0,0,0,0.5);
+      font-family: 'Noto Serif SC', serif;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      padding: 24px 16px;
+      color: #f0f0f0;
+    }
+
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 24px;
+      letter-spacing: 0.05em;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.1);
+    }
+
+    .header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      max-width: 640px;
+      margin-bottom: 28px;
+      font-size: 0.95rem;
+      color: #b0b0b0;
+    }
+
+    .scene-card {
+      background: #0d0d0d;
+      border-radius: 12px;
+      padding: 28px 24px;
+      max-width: 640px;
+      width: 100%;
+      margin-bottom: 32px;
+      border: 1px solid #2a2a2a;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      min-height: 140px;
+    }
+
+    .scene-text {
+      font-size: 1rem;
+      color: #e0e0e0;
+      white-space: pre-wrap;
+    }
+
+    .options-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      justify-content: center;
+      max-width: 640px;
+      width: 100%;
+      margin-bottom: 24px;
+    }
+
+    .option-btn {
+      flex: 1;
+      min-width: 140px;
+      padding: 14px 20px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      background: #2a2a2a;
+      color: #e8e8e8;
+      border: 1px solid #404040;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s, border-color 0.2s;
+    }
+
+    .option-btn:hover:not(:disabled) {
+      background: #383838;
+      border-color: #606060;
+    }
+
+    .option-btn:disabled {
+      cursor: not-allowed;
+      opacity: 0.6;
+    }
+
+    .feedback-box {
+      max-width: 640px;
+      width: 100%;
+      padding: 16px 20px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 20px;
+      display: none;
+    }
+
+    .feedback-box.show {
+      display: block;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .feedback-box.correct {
+      background: rgba(40, 80, 50, 0.6);
+      border: 1px solid #4a7c5a;
+      color: #a8e0b0;
+    }
+
+    .feedback-box.wrong {
+      background: rgba(80, 40, 40, 0.6);
+      border: 1px solid #7c5a5a;
+      color: #e0b0b0;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .ending-screen {
+      max-width: 560px;
+      width: 100%;
+      text-align: center;
+      display: none;
+    }
+
+    .ending-screen.show {
+      display: block;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .ending-title {
+      font-size: 1.25rem;
+      margin-bottom: 16px;
+      color: #e8e8e8;
+    }
+
+    .ending-text {
+      font-size: 1rem;
+      color: #c0c0c0;
+      margin-bottom: 28px;
+      white-space: pre-wrap;
+    }
+
+    .btn-primary {
+      padding: 12px 28px;
+      font-family: inherit;
+      font-size: 1rem;
+      background: #333;
+      color: #e8e8e8;
+      border: 1px solid #555;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: #444;
+    }
+
+    .support-btn {
+      margin-top: 32px;
+      padding: 10px 20px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: transparent;
+      color: #888;
+      border: 1px solid #444;
+      border-radius: 6px;
+      cursor: pointer;
+      text-decoration: none;
+      display: inline-block;
+      transition: color 0.2s, border-color 0.2s;
+    }
+
+    .support-btn:hover {
+      color: #b0b0b0;
+      border-color: #666;
+    }
+
+    .footer-note {
+      margin-top: auto;
+      padding-top: 32px;
+      font-size: 0.75rem;
+      color: #666;
+      text-align: center;
+    }
+
+    /* JSON 查看器样式（保留） */
+    .json-toggle-btn {
+      margin-top: 20px;
+      padding: 8px 16px;
+      background: #2a2a2a;
+      color: #ccc;
+      border: 1px solid #444;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      transition: background 0.2s;
+    }
+
+    .json-toggle-btn:hover {
+      background: #3a3a3a;
+      color: #fff;
+    }
+
+    .json-viewer {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80%;
+      max-width: 800px;
+      max-height: 80vh;
+      background: #1e1e1e;
+      border: 1px solid #444;
+      border-radius: 12px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+      padding: 20px;
+      z-index: 1000;
+      display: none;
+      flex-direction: column;
+    }
+
+    .json-viewer.show {
+      display: flex;
+    }
+
+    .json-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+      color: #ccc;
+      font-size: 1rem;
+      border-bottom: 1px solid #333;
+      padding-bottom: 8px;
+    }
+
+    .json-close {
+      background: none;
+      border: none;
+      color: #aaa;
+      font-size: 1.5rem;
+      cursor: pointer;
+      line-height: 1;
+    }
+
+    .json-close:hover {
+      color: #fff;
+    }
+
+    .json-content {
+      overflow: auto;
+      background: #0d0d0d;
+      border-radius: 8px;
+      padding: 16px;
+      color: #d4d4d4;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: calc(80vh - 80px);
+    }
+
+    .json-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+
+    .json-overlay.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>办公室失窃案 - 你能找出真相吗？</h1>
+
+  <!-- 隐藏的音频元素，用于播放打字机音效 -->
+  <audio id="typewriter-sound" preload="auto" src="typewriter.mp3"></audio>
+
+  <div class="header-bar">
+    <span class="level-display">关卡 <span id="level-num">1</span> / <span id="level-total">5</span></span>
+    <span class="score-display">得分：<span id="score">0</span></span>
+  </div>
+
+  <div class="scene-card">
+    <p class="scene-text" id="scene-text"></p>
+  </div>
+
+  <div class="options-row">
+    <button type="button" class="option-btn" id="opt-a" data-index="0"></button>
+    <button type="button" class="option-btn" id="opt-b" data-index="1"></button>
+    <button type="button" class="option-btn" id="opt-c" data-index="2"></button>
+  </div>
+
+  <div class="feedback-box" id="feedback">
+    <span id="feedback-text"></span>
+  </div>
+
+  <div class="ending-screen" id="ending-screen">
+    <p class="ending-title" id="ending-title">真相大白</p>
+    <p class="ending-text" id="ending-text"></p>
+    <button type="button" class="btn-primary" id="play-again">再玩一次</button>
+  </div>
+
+  <button class="json-toggle-btn" id="showJsonBtn">显示题库 JSON</button>
+  <a href="#" class="support-btn" id="support-btn" target="_blank" rel="noopener">支持开发者</a>
+  <p class="footer-note">本游戏适合13岁以上玩家。部分内容由AI辅助生成。</p>
+
+  <!-- JSON 查看浮层 -->
+  <div class="json-overlay" id="jsonOverlay"></div>
+  <div class="json-viewer" id="jsonViewer">
+    <div class="json-header">
+      <span>题库 JSON 数据</span>
+      <button class="json-close" id="closeJsonBtn">&times;</button>
+    </div>
+    <pre class="json-content" id="jsonContent"></pre>
+  </div>
+
+  <script>
+    // ========== 题目数据 ==========
+    const questions = [
+      {
+        "scene": "【第一关：空掉的咖啡杯】\n周一早晨，你正准备享受那杯用来续命的冰美式，却发现办公桌上的杯子空了，只剩下一圈褐色的污渍。嫌疑人有：刚跑完步大汗淋漓的阿强、一直盯着你杯子看的实习生小萌、以及正在整理文件的行政张姐。你观察到你的杯盖上有个淡淡的红色印记。",
+        "options": [
+          "质问阿强，他看起来渴得能喝下一整条护城河。",
+          "查看小萌的嘴唇，发现她今天涂了斩男色口红。",
+          "询问张姐是不是觉得杯子太脏帮她收去洗了。"
+        ],
+        "correct_index": 1,
+        "correctFeedback": "【正确】小萌眼神躲闪，狡辩说那是‘试色’。真相是：她昨晚熬夜赶PPT，早起低血糖，误把你的咖啡当成续命水了！",
+        "wrongFeedback": "【错误】阿强虽然渴，但他只喝蛋白粉；张姐忙着发开工红包，根本没空理你的陈年老杯。"
+      },
+      {
+        "scene": "【第二关：消失的充电宝】\n手机电量只剩3%！你放在工位上的“巨能充”充电宝不见了。现场留下一张凌乱的便利贴，上面写着：『5F-B03，急！』。已知公司5楼是市场部，B03是会议室。你去到门口，发现里面有三个人：正在激情PPT演讲的总监、埋头改稿的文案、以及在角落狂刷手机的HR。",
+        "options": [
+          "冲进去抢回充电宝，毕竟手机关机等于失联。",
+          "观察谁的手机正连着一根蓝色的数据线（那是你的原装线）。",
+          "查看会议室门口的预约表，看是谁预约了B03。"
+        ],
+        "correct_index": 1,
+        "correctFeedback": "【正确】你发现文案的手机连着蓝色线，且他正一脸‘得救了’的表情。他为了改稿手机没电关机，差点错过老板的夺命连环Call。",
+        "wrongFeedback": "【部分正确】预约表只能证明谁带头开会，不能证明谁顺走了充电宝。至于冲进去抢？明天的离职申请书了解一下？"
+      },
+      {
+        "scene": "【第三关：被拆掉的快递】\n你心心念念的限量版手办快递被拆了！盒子空空如也，旁边散落着几颗透明碎纸屑。嫌疑人：保洁王大叔（正在清理碎纸机）、隔壁桌的技术宅阿明（正戴着耳机疯狂敲代码）、财务李姐（正在分发零食，手里拿着一包类似质感的干燥剂）。",
+        "options": [
+          "翻看阿明的桌面，怀疑他想给自己的机箱加个装饰。",
+          "检查碎纸机里的纸屑，看是否带有快递单的物流信息。",
+          "检查李姐手里的‘干燥剂’，看看那是不是手办的配件。"
+        ],
+        "correct_index": 1,
+        "correctFeedback": "【正确】碎纸机里的纸屑果然有你名字的缩写！原来是王大叔误以为那是废弃纸箱，直接送进了碎纸机——幸好，手办因为太重掉在纸箱夹层里保住了一命。",
+        "wrongFeedback": "【错误】阿明只对显卡感兴趣；李姐那真的是干燥剂，她还分了你一包辣条安抚你受伤的心。"
+      },
+      {
+        "scene": "【第四关：监控下的‘幽灵’】\n公司茶水间的公用冰箱里，你贴了名字的午餐盒被‘洗劫’了，只剩下两片苦瓜。监控显示昨晚8点有一个黑影进入，但由于停电，画面极度模糊，只能看到对方穿了一件带有荧光Logo的上衣。此时公司里有三个人符合特征：穿夜跑服的程序员、穿品牌联名T恤的设计师、穿反光背心的保安大叔。",
+        "options": [
+          "找程序员，因为他经常加班到深夜且看起来很饿。",
+          "询问设计师，并注意到他牙缝里似乎卡了一根你菜里的胡萝卜丝。",
+          "找保安大叔，反光背心在黑暗里最亮。"
+        ],
+        "correct_index": 1,
+        "correctFeedback": "【正确】设计师不仅有胡萝卜丝，还打了个带有你独门秘制豆瓣酱味的饱嗝。他狡辩说这是‘寻找灵感的代价’。",
+        "wrongFeedback": "【错误】程序员昨晚在机房，根本没去茶水间；保安大叔反光背心的Logo是条状的，而监控里是圆形Logo。"
+      },
+      {
+        "scene": "【第五关：终极谜题——消失的年终奖方案】\n老板电脑里的年度调薪方案U盘不见了！全公司陷入恐慌。现场只有三个线索：1. 门锁没坏。 2. 地板上有一根细长的橘色猫毛。 3. 空气中有一股淡淡的、甜腻的蓝莓味。已知：老板养猫，秘书小苏爱抽蓝莓爆珠烟，保洁王大叔家有只橘猫，副总老陈刚在茶水间吃过蓝莓司康。",
+        "options": [
+          "控告秘书小苏，蓝莓味和接触老板办公室的机会她都具备。",
+          "怀疑保洁王大叔，猫毛肯定是他带进来的。",
+          "观察老板的猫，并检查副总老陈的西装口袋。"
+        ],
+        "correct_index": 2,
+        "correctFeedback": "【正确】真相大白！老板的猫跳上桌子把U盘当玩具拨进了老陈的西装口袋（他当时正弯腰和老板说话），蓝莓味是老陈吃司康时沾上的。U盘找到了，年终奖有救了！",
+        "wrongFeedback": "【错误】小苏虽然有嫌疑，但她对猫毛过敏，从来不敢靠近老板的猫；王大叔家的是短毛橘，而那是根长毛猫发。你差点冤枉了老实人！"
+      }
+    ];
+
+    const POINTS_CORRECT = 20;
+    const FEEDBACK_DURATION = 2000;
+
+    let currentLevel = 0;
+    let score = 0;
+    let answered = false;
+
+    const levelNumEl = document.getElementById('level-num');
+    const levelTotalEl = document.getElementById('level-total');
+    const scoreEl = document.getElementById('score');
+    const sceneTextEl = document.getElementById('scene-text');
+    const optA = document.getElementById('opt-a');
+    const optB = document.getElementById('opt-b');
+    const optC = document.getElementById('opt-c');
+    const feedbackEl = document.getElementById('feedback');
+    const feedbackTextEl = document.getElementById('feedback-text');
+    const endingScreen = document.getElementById('ending-screen');
+    const endingTitleEl = document.getElementById('ending-title');
+    const endingTextEl = document.getElementById('ending-text');
+    const playAgainBtn = document.getElementById('play-again');
+    const supportBtn = document.getElementById('support-btn');
+
+    // 获取音频元素
+    const typewriterSound = document.getElementById('typewriter-sound');
+
+    // 播放音效的函数，带错误处理
+    function playTypewriterSound() {
+      if (!typewriterSound) return;
+      // 重置音频到开头，以便连续点击时可以重新播放
+      typewriterSound.currentTime = 0;
+      // 尝试播放，捕获可能的浏览器限制错误
+      typewriterSound.play().catch(error => {
+        console.log('音效播放失败（可能是浏览器限制）:', error);
+      });
+    }
+
+    // JSON 查看器相关元素
+    const showJsonBtn = document.getElementById('showJsonBtn');
+    const jsonViewer = document.getElementById('jsonViewer');
+    const jsonOverlay = document.getElementById('jsonOverlay');
+    const jsonContent = document.getElementById('jsonContent');
+    const closeJsonBtn = document.getElementById('closeJsonBtn');
+
+    function displayJson() {
+      jsonContent.textContent = JSON.stringify(questions, null, 2);
+    }
+
+    function openJsonViewer() {
+      displayJson();
+      jsonViewer.classList.add('show');
+      jsonOverlay.classList.add('show');
+    }
+
+    function closeJsonViewer() {
+      jsonViewer.classList.remove('show');
+      jsonOverlay.classList.remove('show');
+    }
+
+    showJsonBtn.addEventListener('click', openJsonViewer);
+    closeJsonBtn.addEventListener('click', closeJsonViewer);
+    jsonOverlay.addEventListener('click', closeJsonViewer);
+
+    // 游戏逻辑
+    function showQuestion() {
+      answered = false;
+      const q = questions[currentLevel];
+      levelNumEl.textContent = currentLevel + 1;
+      levelTotalEl.textContent = questions.length;
+      scoreEl.textContent = score;
+      sceneTextEl.textContent = q.scene;
+
+      // 每次显示新场景时播放音效
+      playTypewriterSound();
+
+      [optA, optB, optC].forEach((btn, i) => {
+        btn.textContent = q.options[i] || '';
+        btn.disabled = false;
+        btn.style.display = q.options[i] ? 'inline-block' : 'none';
+      });
+
+      feedbackEl.classList.remove('show', 'correct', 'wrong');
+      endingScreen.classList.remove('show');
+    }
+
+    function showFeedback(isCorrect, message) {
+      feedbackEl.className = 'feedback-box show ' + (isCorrect ? 'correct' : 'wrong');
+      feedbackTextEl.textContent = message;
+      setTimeout(() => {
+        feedbackEl.classList.remove('show');
+        if (currentLevel < questions.length - 1) {
+          currentLevel++;
+          showQuestion();
+        } else {
+          showEnding();
+        }
+      }, FEEDBACK_DURATION);
+    }
+
+    function showEnding() {
+      const totalPossible = questions.length * POINTS_CORRECT;
+      const percent = totalPossible > 0 ? Math.round((score / totalPossible) * 100) : 0;
+      let title = '真相大白';
+      let text = `你的最终得分：${score} / ${totalPossible}。\n`;
+      if (percent >= 80) {
+        text += '你思维缜密、步步为营，成功还原了案件脉络。办公室失窃案，告破！';
+      } else if (percent >= 50) {
+        text += '你抓住了部分关键线索，但还有改进空间。再玩一次，试试满分？';
+      } else {
+        text += '破案需要逻辑与耐心。再试一次，留意每个选项对证据链的影响。';
+      }
+      endingTitleEl.textContent = title;
+      endingTextEl.textContent = text;
+      endingScreen.classList.add('show');
+    }
+
+    function onOptionClick(index) {
+      if (answered) return;
+      answered = true;
+      const q = questions[currentLevel];
+      [optA, optB, optC].forEach(btn => { btn.disabled = true; });
+
+      const isCorrect = index === q.correct_index;
+      if (isCorrect) score += POINTS_CORRECT;
+      showFeedback(isCorrect, isCorrect ? q.correctFeedback : q.wrongFeedback);
+    }
+
+    optA.addEventListener('click', () => onOptionClick(0));
+    optB.addEventListener('click', () => onOptionClick(1));
+    optC.addEventListener('click', () => onOptionClick(2));
+
+    playAgainBtn.addEventListener('click', () => {
+      currentLevel = 0;
+      score = 0;
+      showQuestion();
+    });
+
+    supportBtn.href = '#';
+
+    showQuestion();
+  </script>
+</body>
+</html>
