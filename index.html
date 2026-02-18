@@ -327,7 +327,10 @@
   </div>
 
   <button class="json-toggle-btn" id="showJsonBtn">显示题库 JSON</button>
-  <a href="https://buymeacoffee.com/xuchuanyu9" target="_blank">支持开发者</a>
+
+  <!-- 修正后的支持开发者按钮：添加 class 和 id，保留 target 和 rel -->
+  <a href="https://buymeacoffee.com/xuchuanyu9" class="support-btn" id="support-btn" target="_blank" rel="noopener">支持开发者</a>
+
   <p class="footer-note">本游戏适合13岁以上玩家。部分内容由AI辅助生成。</p>
 
   <!-- JSON 查看浮层 -->
@@ -420,7 +423,7 @@
     const endingTitleEl = document.getElementById('ending-title');
     const endingTextEl = document.getElementById('ending-text');
     const playAgainBtn = document.getElementById('play-again');
-    const supportBtn = document.getElementById('support-btn');
+    const supportBtn = document.getElementById('support-btn'); // 现在可以正确获取元素
 
     // 获取音频元素
     const typewriterSound = document.getElementById('typewriter-sound');
@@ -536,7 +539,8 @@
       showQuestion();
     });
 
-    supportBtn.href = '#';
+    // 删除下面这行，避免覆盖真实的 Buy Me a Coffee 链接
+    // supportBtn.href = '#';
 
     showQuestion();
   </script>
