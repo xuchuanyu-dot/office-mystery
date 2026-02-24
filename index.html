@@ -1,12 +1,11 @@
 <!DOCTYPE html>
-<html lang="zh-CN">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>办公室失窃案 - 你能找出真相吗？</title>
+  <title>Office Theft Mystery - Can You Uncover the Truth?</title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    /* 你的原有样式保持不变 */
     * {
       margin: 0;
       padding: 0;
@@ -202,7 +201,6 @@
       text-align: center;
     }
 
-    /* JSON 查看器样式（保留） */
     .json-toggle-btn {
       margin-top: 20px;
       padding: 8px 16px;
@@ -296,14 +294,14 @@
   </style>
 </head>
 <body>
-  <h1>办公室失窃案 - 你能找出真相吗？</h1>
+  <h1>Office Theft Mystery - Can You Uncover the Truth?</h1>
 
-  <!-- 隐藏的音频元素，用于播放打字机音效 -->
+  <!-- Hidden audio element for typewriter sound -->
   <audio id="typewriter-sound" preload="auto" src="typewriter.mp3"></audio>
 
   <div class="header-bar">
-    <span class="level-display">关卡 <span id="level-num">1</span> / <span id="level-total">5</span></span>
-    <span class="score-display">得分：<span id="score">0</span></span>
+    <span class="level-display">Level <span id="level-num">1</span> / <span id="level-total">10</span></span>
+    <span class="score-display">Score: <span id="score">0</span></span>
   </div>
 
   <div class="scene-card">
@@ -321,85 +319,139 @@
   </div>
 
   <div class="ending-screen" id="ending-screen">
-    <p class="ending-title" id="ending-title">真相大白</p>
+    <p class="ending-title" id="ending-title">Truth Revealed</p>
     <p class="ending-text" id="ending-text"></p>
-    <button type="button" class="btn-primary" id="play-again">再玩一次</button>
+    <button type="button" class="btn-primary" id="play-again">Play Again</button>
   </div>
 
-  <button class="json-toggle-btn" id="showJsonBtn">显示题库 JSON</button>
+  <button class="json-toggle-btn" id="showJsonBtn">Show Question JSON</button>
 
-  <!-- 修正后的支持开发者按钮：添加 class 和 id，保留 target 和 rel -->
-  <a href="https://buymeacoffee.com/xuchuanyu9" class="support-btn" id="support-btn" target="_blank" rel="noopener">支持开发者</a>
+  <a href="https://buymeacoffee.com/xuchuanyu9" class="support-btn" id="support-btn" target="_blank" rel="noopener">Support the Developer</a>
 
-  <p class="footer-note">本游戏适合13岁以上玩家。部分内容由AI辅助生成。</p>
+  <p class="footer-note">This game is suitable for players aged 13 and above. Some content is assisted by AI.</p>
 
-  <!-- JSON 查看浮层 -->
+  <!-- JSON Viewer Modal -->
   <div class="json-overlay" id="jsonOverlay"></div>
   <div class="json-viewer" id="jsonViewer">
     <div class="json-header">
-      <span>题库 JSON 数据</span>
+      <span>Question Bank JSON Data</span>
       <button class="json-close" id="closeJsonBtn">&times;</button>
     </div>
     <pre class="json-content" id="jsonContent"></pre>
   </div>
 
   <script>
-    // ========== 题目数据 ==========
+    // ========== Question Data ==========
     const questions = [
       {
-        "scene": "【第一关：空掉的咖啡杯】\n周一早晨，你正准备享受那杯用来续命的冰美式，却发现办公桌上的杯子空了，只剩下一圈褐色的污渍。嫌疑人有：刚跑完步大汗淋漓的阿强、一直盯着你杯子看的实习生小萌、以及正在整理文件的行政张姐。你观察到你的杯盖上有个淡淡的红色印记。",
-        "options": [
-          "质问阿强，他看起来渴得能喝下一整条护城河。",
-          "查看小萌的嘴唇，发现她今天涂了斩男色口红。",
-          "询问张姐是不是觉得杯子太脏帮她收去洗了。"
+        scene: "[Level 1: The Empty Coffee Cup]\nIt's Monday morning and you're about to savor your life-saving iced Americano—only to find the cup on your desk completely empty, with just a brown ring left behind. Suspects: Qiang, who just finished a sweaty run; intern Meng, who kept staring at your cup; and admin Zhang, who's sorting files. You notice a faint red mark on your cup lid.",
+        options: [
+          "Confront Qiang. He looks thirsty enough to drink a whole moat.",
+          "Check Meng's lips and notice she's wearing a bold red lipstick today.",
+          "Ask Zhang if she thought the cup was dirty and took it away to wash."
         ],
-        "correct_index": 1,
-        "correctFeedback": "【正确】小萌眼神躲闪，狡辩说那是‘试色’。真相是：她昨晚熬夜赶PPT，早起低血糖，误把你的咖啡当成续命水了！",
-        "wrongFeedback": "【错误】阿强虽然渴，但他只喝蛋白粉；张姐忙着发开工红包，根本没空理你的陈年老杯。"
+        correct_index: 1,
+        correctFeedback: "[Correct] Meng's eyes dart away and she claims it was just a 'swatch test.' In truth, she stayed up late rushing a PPT, woke up with low blood sugar, and mistook your coffee for an emergency energy drink.",
+        wrongFeedback: "[Wrong] Qiang may be thirsty, but he only drinks protein shakes. Zhang is busy sending out 'back-to-work' red packets and has no time for your ancient coffee cup."
       },
       {
-        "scene": "【第二关：消失的充电宝】\n手机电量只剩3%！你放在工位上的“巨能充”充电宝不见了。现场留下一张凌乱的便利贴，上面写着：『5F-B03，急！』。已知公司5楼是市场部，B03是会议室。你去到门口，发现里面有三个人：正在激情PPT演讲的总监、埋头改稿的文案、以及在角落狂刷手机的HR。",
-        "options": [
-          "冲进去抢回充电宝，毕竟手机关机等于失联。",
-          "观察谁的手机正连着一根蓝色的数据线（那是你的原装线）。",
-          "查看会议室门口的预约表，看是谁预约了B03。"
+        scene: "[Level 2: The Missing Power Bank]\nYour phone battery is down to 3%! The 'MegaCharge' power bank on your desk is gone. All that's left is a messy sticky note reading: '5F-B03, urgent!' You know 5F is Marketing and B03 is a meeting room. At the door you see three people: the director passionately presenting a PPT, a copywriter buried in revisions, and an HR rep scrolling on their phone in the corner.",
+        options: [
+          "Rush in and grab your power bank back—phone off equals social death.",
+          "See whose phone is connected to a blue cable—your original data cable.",
+          "Check the meeting room booking sheet to see who reserved B03."
         ],
-        "correct_index": 1,
-        "correctFeedback": "【正确】你发现文案的手机连着蓝色线，且他正一脸‘得救了’的表情。他为了改稿手机没电关机，差点错过老板的夺命连环Call。",
-        "wrongFeedback": "【部分正确】预约表只能证明谁带头开会，不能证明谁顺走了充电宝。至于冲进去抢？明天的离职申请书了解一下？"
+        correct_index: 1,
+        correctFeedback: "[Correct] You spot the copywriter's phone plugged into the blue cable, with a 'saved at last' expression. Their phone died while revising, nearly missing a barrage of calls from the boss.",
+        wrongFeedback: "[Partially correct] The booking sheet only shows who scheduled the meeting, not who stole your power bank. And barging in to snatch it back? Get ready to write your resignation letter tomorrow."
       },
       {
-        "scene": "【第三关：被拆掉的快递】\n你心心念念的限量版手办快递被拆了！盒子空空如也，旁边散落着几颗透明碎纸屑。嫌疑人：保洁王大叔（正在清理碎纸机）、隔壁桌的技术宅阿明（正戴着耳机疯狂敲代码）、财务李姐（正在分发零食，手里拿着一包类似质感的干燥剂）。",
-        "options": [
-          "翻看阿明的桌面，怀疑他想给自己的机箱加个装饰。",
-          "检查碎纸机里的纸屑，看是否带有快递单的物流信息。",
-          "检查李姐手里的‘干燥剂’，看看那是不是手办的配件。"
+        scene: "[Level 3: The Opened Package]\nYour long-awaited limited-edition figure has arrived—but the box is already opened and now empty. A few clear shredded paper bits are scattered nearby. Suspects: janitor Wang (currently cleaning the shredder), tech nerd Ming at the next desk (furiously typing with headphones on), and accountant Li (handing out snacks with a bag of silica-gel-like packets).",
+        options: [
+          "Search Ming's desk, suspecting he wanted a new decoration for his PC case.",
+          "Check the shredded paper inside the shredder for fragments of your shipping label.",
+          "Inspect Li's 'silica gel' to see if it's actually an accessory from your figure."
         ],
-        "correct_index": 1,
-        "correctFeedback": "【正确】碎纸机里的纸屑果然有你名字的缩写！原来是王大叔误以为那是废弃纸箱，直接送进了碎纸机——幸好，手办因为太重掉在纸箱夹层里保住了一命。",
-        "wrongFeedback": "【错误】阿明只对显卡感兴趣；李姐那真的是干燥剂，她还分了你一包辣条安抚你受伤的心。"
+        correct_index: 1,
+        correctFeedback: "[Correct] Among the shredded bits you find pieces showing your name! Wang mistook the box for trash and fed it straight into the shredder. Luckily, the figure was too heavy, slipped into a cardboard fold, and survived.",
+        wrongFeedback: "[Wrong] Ming only cares about GPUs, not cute figures. Li is really holding silica gel—and she even gives you some spicy snacks to comfort your wounded soul."
       },
       {
-        "scene": "【第四关：监控下的‘幽灵’】\n公司茶水间的公用冰箱里，你贴了名字的午餐盒被‘洗劫’了，只剩下两片苦瓜。监控显示昨晚8点有一个黑影进入，但由于停电，画面极度模糊，只能看到对方穿了一件带有荧光Logo的上衣。此时公司里有三个人符合特征：穿夜跑服的程序员、穿品牌联名T恤的设计师、穿反光背心的保安大叔。",
-        "options": [
-          "找程序员，因为他经常加班到深夜且看起来很饿。",
-          "询问设计师，并注意到他牙缝里似乎卡了一根你菜里的胡萝卜丝。",
-          "找保安大叔，反光背心在黑暗里最亮。"
+        scene: "[Level 4: The 'Ghost' on Camera]\nYour labeled lunch box in the office fridge has been 'looted,' leaving only a couple of bitter melon slices. Security footage shows a shadow entering the pantry at 8 p.m., but an outage made the image blurry. All you can see is a glowing logo on the intruder's top. Three people match: a programmer in night-running gear, a designer in a collab T-shirt, and a security guard in a reflective vest.",
+        options: [
+          "Question the programmer—he often works late and always looks starving.",
+          "Talk to the designer and notice a tiny carrot shred in his teeth, just like in your dish.",
+          "Question the guard; the reflective vest should be brightest in the dark."
         ],
-        "correct_index": 1,
-        "correctFeedback": "【正确】设计师不仅有胡萝卜丝，还打了个带有你独门秘制豆瓣酱味的饱嗝。他狡辩说这是‘寻找灵感的代价’。",
-        "wrongFeedback": "【错误】程序员昨晚在机房，根本没去茶水间；保安大叔反光背心的Logo是条状的，而监控里是圆形Logo。"
+        correct_index: 1,
+        correctFeedback: "[Correct] The designer not only has a carrot shred stuck, he even lets out a burp that smells like your secret spicy bean paste. He claims it was the 'price of inspiration.'",
+        wrongFeedback: "[Wrong] The programmer was in the server room all night and never went to the pantry. The guard's vest has long strip logos, but the footage shows a round logo."
       },
       {
-        "scene": "【第五关：终极谜题——消失的年终奖方案】\n老板电脑里的年度调薪方案U盘不见了！全公司陷入恐慌。现场只有三个线索：1. 门锁没坏。 2. 地板上有一根细长的橘色猫毛。 3. 空气中有一股淡淡的、甜腻的蓝莓味。已知：老板养猫，秘书小苏爱抽蓝莓爆珠烟，保洁王大叔家有只橘猫，副总老陈刚在茶水间吃过蓝莓司康。",
-        "options": [
-          "控告秘书小苏，蓝莓味和接触老板办公室的机会她都具备。",
-          "怀疑保洁王大叔，猫毛肯定是他带进来的。",
-          "观察老板的猫，并检查副总老陈的西装口袋。"
+        scene: "[Level 5: Final Puzzle – The Vanished Bonus Plan]\nThe USB drive containing the annual salary-adjustment plan from your boss's computer has disappeared, throwing the whole company into panic. Three clues: 1) The door lock isn't broken. 2) There's a long orange cat hair on the floor. 3) A faint, sweet blueberry smell lingers in the air. Known facts: the boss owns a cat; secretary Su smokes blueberry-flavored cigarettes; janitor Wang has an orange cat; and VP Chen just ate a blueberry scone in the pantry.",
+        options: [
+          "Accuse secretary Su—she has both the blueberry smell and access to the boss's office.",
+          "Suspect janitor Wang—the cat hair must have come from his cat.",
+          "Observe the boss's cat and check VP Chen's suit pockets."
         ],
-        "correct_index": 2,
-        "correctFeedback": "【正确】真相大白！老板的猫跳上桌子把U盘当玩具拨进了老陈的西装口袋（他当时正弯腰和老板说话），蓝莓味是老陈吃司康时沾上的。U盘找到了，年终奖有救了！",
-        "wrongFeedback": "【错误】小苏虽然有嫌疑，但她对猫毛过敏，从来不敢靠近老板的猫；王大叔家的是短毛橘，而那是根长毛猫发。你差点冤枉了老实人！"
+        correct_index: 2,
+        correctFeedback: "[Correct] Case closed! The boss's cat batted the USB into Chen's suit pocket while he was bending over to talk. The blueberry smell came from his scone. The USB is found and the year-end bonus is saved.",
+        wrongFeedback: "[Wrong] Su may seem suspicious, but she's allergic to cat hair and never goes near the boss's cat. Wang's cat has short hair, while the one you found is long. You almost framed the wrong guy."
+      },
+      {
+        scene: "[Level 6: The Missing Red Marker]\nBefore an important client visit, you discover the only red marker on the meeting room whiteboard is gone—only black and blue remain. Footage shows only three people entered today: sales rep Liu for the morning stand-up, IT tech Zhao to adjust the projector, and the janitor delivering tea. On the board's edge, there's a fresh smear of red ink, as if something brushed against it.",
+        options: [
+          "Interrogate Liu, who loves using red to highlight key points.",
+          "Check Zhao's work uniform pocket for a red marker.",
+          "Ask the janitor if she took away a 'broken pen' to throw it out."
+        ],
+        correct_index: 1,
+        correctFeedback: "[Correct] Zhao has the red marker in his pocket. He borrowed it to label some equipment while fixing the projector, then forgot to put it back, insisting he thought it was 'for everyone to use.'",
+        wrongFeedback: "[Wrong] Liu is using his own signature pen today. The janitor only tossed out dried-up markers—the red smear came from when the working pen was pocketed."
+      },
+      {
+        scene: "[Level 7: The 'Shared' Yogurt]\nYou kept a row of yogurt with your name on it on the second shelf of the fridge, but two bottles are missing and your name tag is torn. On the same shelf: fitness buff Jie's chicken breast, pregnant coworker Lin's fresh milk, and newbie intern Bai's snacks. There's a crooked note on the fridge door: 'Borrowed two, will return tomorrow~' written in shaky handwriting.",
+        options: [
+          "Ask Jie; fitness enthusiasts care most about protein intake.",
+          "Ask Lin; pregnant women might suddenly crave yogurt.",
+          "Compare the handwriting on Bai's sign-in sheet or notebook with the note."
+        ],
+        correct_index: 2,
+        correctFeedback: "[Correct] Bai's handwriting matches the note exactly. He stayed late, got hungry, and was too shy to ask, so he 'borrowed' your yogurt and seriously marked 'return yogurt' on his calendar.",
+        wrongFeedback: "[Wrong] Jie only drinks sugar-free yogurt, but yours is flavored. Lin has dietary restrictions on dairy. The wavy tilde on the note screams 'young intern habit.'"
+      },
+      {
+        scene: "[Level 8: The Jammed Printer]\nYou waited half an hour in the print queue, only to get dozens of printouts of the same meme instead of your report. A half-torn A4 sheet is stuck at the output, with a partial fingerprint and a small coffee stain. Nearby at the time: front desk Mei, PM Wu who just finished a meeting, and legal officer Zheng printing contracts.",
+        options: [
+          "Suspect Mei; the front desk often prints bulk notices.",
+          "Inspect Wu's right index finger for toner or paper dust.",
+          "Ask Zheng if he selected the wrong file—those memes look like chat screenshots."
+        ],
+        correct_index: 1,
+        correctFeedback: "[Correct] Wu's index finger still has toner and a faint coffee stain. He secretly tried to print his daughter's homework, but accidentally sent a meme from the team chat. When the printer jammed, he panicked and left the evidence.",
+        wrongFeedback: "[Wrong] Mei was using another printer. Zheng prints only PDF contracts, so no memes. The fingerprint and coffee stain at the jam site are the real giveaway."
+      },
+      {
+        scene: "[Level 9: The Cigarette in the Plant]\nSomeone stubbed a cigarette in your desk pothos, scorching the soil. The office is non-smoking—people either go downstairs or use vapes. Possible culprits: dev Zhou who recently quit smoking, designer Lin who's been stressed and slacking, and the property handyman who came to fix the AC. There's half a blurry shoe print along the plant pot's rim, as if someone tiptoed to reach something.",
+        options: [
+          "Question Zhou; failed quitters are most likely to sneak a smoke.",
+          "Check the sole pattern of Lin's shoes and compare it with the print on the pot.",
+          "Ask the handyman if he extinguished a cigarette in the pot while on the balcony."
+        ],
+        correct_index: 1,
+        correctFeedback: "[Correct] The pattern on Lin's sole matches the print on the pot. She was anxious over a deadline and secretly smoked by the window. Unable to reach the trash can, she shoved the butt into your plant, then later bought you a new one as an apology.",
+        wrongFeedback: "[Wrong] Zhou really did quit—he only has gum in his pocket. The handyman was fixing AC on another floor and never came to your area. The footprint points clearly to someone in sneakers, not work boots."
+      },
+      {
+        scene: "[Level 10: Final Puzzle – Who Touched My Keyboard]\nSeveral commonly used keys (W, A, S, D) on your mechanical keyboard have been swapped to quiet red switches, while the others remain clicky blues. You definitely didn't change them. Last night, the only ones staying late were: your gaming buddy Wei, recently transferred newcomer Fang, and the boss who dropped by to grab a USB drive. Under the keyboard tray you find a receipt from an electronics mall for key switches, dated yesterday.",
+        options: [
+          "Suspect Wei; he might be pranking you or 'upgrading' your feel.",
+          "Ask Fang if he borrowed your keyboard to practice typing and broke some keycaps.",
+          "Check the membership number or note on the receipt to see whose purchase it was."
+        ],
+        correct_index: 2,
+        correctFeedback: "[Correct] The membership number on the receipt belongs to Wei. He thought your blue switches were too loud and ruined his ability to hear footsteps in-game, so he secretly replaced your WASD with quiet reds and kept the receipt in case he needed to 'justify the upgrade.' Keyboard war: confirmed.",
+        wrongFeedback: "[Wrong] Fang uses the standard membrane keyboard provided by the company. The boss only came in to grab a USB and never touched your keys. Quiet red switches on game keys scream 'gamer teammate motive.'"
       }
     ];
 
@@ -423,23 +475,19 @@
     const endingTitleEl = document.getElementById('ending-title');
     const endingTextEl = document.getElementById('ending-text');
     const playAgainBtn = document.getElementById('play-again');
-    const supportBtn = document.getElementById('support-btn'); // 现在可以正确获取元素
 
-    // 获取音频元素
+    // Audio element
     const typewriterSound = document.getElementById('typewriter-sound');
 
-    // 播放音效的函数，带错误处理
     function playTypewriterSound() {
       if (!typewriterSound) return;
-      // 重置音频到开头，以便连续点击时可以重新播放
       typewriterSound.currentTime = 0;
-      // 尝试播放，捕获可能的浏览器限制错误
       typewriterSound.play().catch(error => {
-        console.log('音效播放失败（可能是浏览器限制）:', error);
+        console.log('Sound playback failed (possibly browser restriction):', error);
       });
     }
 
-    // JSON 查看器相关元素
+    // JSON Viewer elements
     const showJsonBtn = document.getElementById('showJsonBtn');
     const jsonViewer = document.getElementById('jsonViewer');
     const jsonOverlay = document.getElementById('jsonOverlay');
@@ -465,7 +513,7 @@
     closeJsonBtn.addEventListener('click', closeJsonViewer);
     jsonOverlay.addEventListener('click', closeJsonViewer);
 
-    // 游戏逻辑
+    // Game logic
     function showQuestion() {
       answered = false;
       const q = questions[currentLevel];
@@ -474,7 +522,6 @@
       scoreEl.textContent = score;
       sceneTextEl.textContent = q.scene;
 
-      // 每次显示新场景时播放音效
       playTypewriterSound();
 
       [optA, optB, optC].forEach((btn, i) => {
@@ -504,16 +551,16 @@
     function showEnding() {
       const totalPossible = questions.length * POINTS_CORRECT;
       const percent = totalPossible > 0 ? Math.round((score / totalPossible) * 100) : 0;
-      let title = '真相大白';
-      let text = `你的最终得分：${score} / ${totalPossible}。\n`;
+      let text = `Your final score: ${score} / ${totalPossible}.\n`;
+
       if (percent >= 80) {
-        text += '你思维缜密、步步为营，成功还原了案件脉络。办公室失窃案，告破！';
+        text += 'Your reasoning is sharp and methodical—you successfully reconstructed the whole case. The office theft mystery is solved!';
       } else if (percent >= 50) {
-        text += '你抓住了部分关键线索，但还有改进空间。再玩一次，试试满分？';
+        text += 'You caught some key clues, but there\'s still room for improvement. Play again and aim for a perfect score.';
       } else {
-        text += '破案需要逻辑与耐心。再试一次，留意每个选项对证据链的影响。';
+        text += 'Solving a case takes logic and patience. Try again, and pay attention to how each choice fits into the chain of evidence.';
       }
-      endingTitleEl.textContent = title;
+      endingTitleEl.textContent = 'Truth Revealed';
       endingTextEl.textContent = text;
       endingScreen.classList.add('show');
     }
@@ -538,9 +585,6 @@
       score = 0;
       showQuestion();
     });
-
-    // 删除下面这行，避免覆盖真实的 Buy Me a Coffee 链接
-    // supportBtn.href = '#';
 
     showQuestion();
   </script>
